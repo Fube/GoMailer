@@ -17,16 +17,6 @@ func Inject(m mailerM.Mailer) {
 
 func handleSendEmail(context *gin.Context) {
 
-	validate := validator.New()
-
-
-
-	if err := validate.Struct(mail); err != nil {
-		fmt.Println(err)
-		context.JSON(http.StatusBadRequest, err)
-		return
-	}
-
 	if err := mailer.SendEmail(&mail); err != nil {
 		fmt.Println(err)
 		context.JSON(http.StatusInternalServerError, err)
