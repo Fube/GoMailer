@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -40,14 +41,14 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestRegisterMailRoute(t *testing.T) {
+func TestRegisterMailRouteWithValidInfo(t *testing.T) {
 	router := gin.Default()
 	Routes(router)
 
 	marshal, _ := json.Marshal(mailer.Mail{To: "test@test.test", Subject: "Subject", Message: "Message"})
-	json := string(marshal)
+	serial := string(marshal)
 
-	req, err := http.NewRequest(http.MethodPost, "/mail", strings.NewReader(json))
+	req, err := http.NewRequest(http.MethodPost, "/mail", strings.NewReader(serial))
 
 	if err != nil {
 		fmt.Println(err)
@@ -56,7 +57,28 @@ func TestRegisterMailRoute(t *testing.T) {
 
 	testHTTPResponse(t, router, req, func(w *httptest.ResponseRecorder) bool {
 
-		statusOk := w.Code == http.StatusOK
-		return statusOk
+		assert.Equal(t, w.Code, http.StatusOK)
+		return true
+	})
+}
+
+func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
+	router := gin.Default()
+	Routes(router)
+
+	marshal, _ := json.Marshal(mailer.Mail{To: "", Subject: "Subject", Message: "Message"})
+	serial := string(marshal)
+
+	req, err := http.NewRequest(http.MethodPost, "/mail", strings.NewReader(serial))
+
+	if err != nil {
+		fmt.Println(err)
+		t.Fatal(err)
+	}
+
+	testHTTPResponse(t, router, req, func(w *httptest.ResponseRecorder) bool {
+
+		assert.Equal(t, w.Code, http.StatusBadRequest)
+		return true
 	})
 }
