@@ -21,7 +21,7 @@ func handleSendEmail(context *gin.Context) {
 
 	if err := context.ShouldBindJSON(&mail); err != nil {
 		fmt.Println(err)
-		context.JSON(http.StatusInternalServerError, err)
+		context.JSON(http.StatusBadRequest, err)
 		return
 	}
 
