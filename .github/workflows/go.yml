@@ -23,3 +23,9 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - name: Grant execute perm on cover.sh
+      run: chmod +x cover.sh
+
+    - name: Code coverage test
+      run: ./cover.sh
