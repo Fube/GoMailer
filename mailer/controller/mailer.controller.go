@@ -19,13 +19,7 @@ func handleSendEmail(context *gin.Context) {
 
 	validate := validator.New()
 
-	var mail mailerM.Mail
 
-	if err := context.ShouldBindJSON(&mail); err != nil {
-		fmt.Println(err)
-		context.JSON(http.StatusBadRequest, err)
-		return
-	}
 
 	if err := validate.Struct(mail); err != nil {
 		fmt.Println(err)
