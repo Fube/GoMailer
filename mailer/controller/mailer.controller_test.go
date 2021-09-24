@@ -2,7 +2,7 @@ package controller
 
 import (
 	"GoMailer/internal/projectpath"
-	"GoMailer/mailer"
+	mailerM "GoMailer/mailer"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -45,7 +45,7 @@ func TestRegisterMailRouteWithValidInfo(t *testing.T) {
 	router := gin.Default()
 	Routes(router)
 
-	marshal, _ := json.Marshal(mailer.Mail{To: "test@test.test", Subject: "Subject", Message: "Message"})
+	marshal, _ := json.Marshal(mailerM.Mail{To: "test@test.test", Subject: "Subject", Message: "Message"})
 	serial := string(marshal)
 
 	req, err := http.NewRequest(http.MethodPost, "/mail", strings.NewReader(serial))
@@ -66,7 +66,7 @@ func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
 	router := gin.Default()
 	Routes(router)
 
-	marshal, _ := json.Marshal(mailer.Mail{To: "", Subject: "Subject", Message: "Message"})
+	marshal, _ := json.Marshal(mailerM.Mail{To: "", Subject: "Subject", Message: "Message"})
 	serial := string(marshal)
 
 	req, err := http.NewRequest(http.MethodPost, "/mail", strings.NewReader(serial))

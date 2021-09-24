@@ -1,7 +1,7 @@
 package mailer
 
 type Mailer interface {
-	SendEmail(to string, email string) error
+	SendEmail(*Mail) error
 }
 
 type Mail struct {
@@ -9,4 +9,3 @@ type Mail struct {
 	Message string `json:"message"`
 	Subject string `json:"subject"`
 }
-

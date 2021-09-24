@@ -1,23 +1,22 @@
 package controller
 
 import (
-	"GoMailer/mailer"
-	mailerS "GoMailer/mailer/service"
+	mailerM "GoMailer/mailer"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 )
 
-var dialer mailerS.Dialer
+var mailer mailerM.Mailer
 
-func Inject(d *mailerS.Dialer) {
-	dialer = *d
+func Inject(m mailerM.Mailer) {
+	mailer = m
 }
 
 func handleSendEmail(context *gin.Context) {
 
-	var mail mailer.Mail
+	var mail mailerM.Mail
 
 	if err := context.ShouldBindJSON(&mail); err != nil {
 		fmt.Println(err)
@@ -25,7 +24,7 @@ func handleSendEmail(context *gin.Context) {
 		return
 	}
 
-	if err := dialer.SendEmail(&mail); err != nil {
+	if err := mailer.SendEmail(&mail); err != nil {
 		fmt.Println(err)
 		context.JSON(http.StatusInternalServerError, err)
 		return
@@ -37,8 +36,8 @@ func handleSendEmail(context *gin.Context) {
 // Routes injection for mailer
 func Routes(route *gin.Engine) {
 
-	if dialer.Dialer == nil {
-		fmt.Fprintln(os.Stderr, fmt.Errorf("dialer dependency not injected or point to nil"))
+	if mailer == nil {
+		_, _ = fmt.Fprintln(os.Stderr, fmt.Errorf("dialer dependency not injected or point to nil"))
 		os.Exit(1)
 	}
 

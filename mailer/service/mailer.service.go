@@ -1,7 +1,7 @@
 package service
 
 import (
-	"GoMailer/mailer"
+	mailerM "GoMailer/mailer"
 	"crypto/tls"
 	gomail "gopkg.in/mail.v2"
 )
@@ -11,7 +11,7 @@ type Dialer struct {
 	Dialer *gomail.Dialer
 }
 
-func (d Dialer) SendEmail(mail *mailer.Mail) error {
+func (d Dialer) SendEmail(mail *mailerM.Mail) error {
 
 	m := gomail.NewMessage()
 
