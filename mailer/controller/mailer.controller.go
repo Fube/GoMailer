@@ -8,17 +8,20 @@ import (
 	"net/http"
 )
 
-var mailer mailerM.Mailer
-
-func Inject(m mailerM.Mailer) {
-	mailer = m
+type MailerControllerImpl struct {
+	mailer mailerM.Mailer
 }
 
-func handleSendEmail(context *gin.Context) {
+
+func (m *MailerControllerImpl) Inject(mailer mailerM.Mailer) {
+	m.mailer = mailer
+}
+
+func (m MailerControllerImpl) handleSendEmail(context *gin.Context) {
 
 	mail := context.Keys["mail"].(*mailerM.Mail)
 
-	if err := mailer.SendEmail(mail); err != nil {
+	if err := m.mailer.SendEmail(mail); err != nil {
 		fmt.Println(err)
 		context.JSON(http.StatusInternalServerError, err)
 		return
@@ -28,13 +31,13 @@ func handleSendEmail(context *gin.Context) {
 }
 
 // Routes injection for mailer
-func Routes(route *gin.Engine) error {
+func (m MailerControllerImpl) Routes(route *gin.Engine) error {
 
-	if mailer == nil {
+	if m.mailer == nil {
 		return errors.New("dialer dependency not injected or point to nil")
 	}
 
 	group := route.Group("/mail").Use(UnMarshallMail, ValidateEmail)
-	group.POST("", handleSendEmail)
+	group.POST("", m.handleSendEmail)
 	return nil
 }

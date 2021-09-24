@@ -54,9 +54,13 @@ func TestRegisterMailRouteWithValidInfo(t *testing.T) {
 	// Just so that it doesn't actually send an email
 	mockMailer := new(MockMailer)
 
+	impl := MailerControllerImpl{}
+
 	router := gin.Default()
-	Inject(mockMailer)
-	Routes(router)
+	impl.Inject(mockMailer)
+	err := impl.Routes(router)
+
+	assert.Nil(t, err)
 
 	marshal, _ := json.Marshal(mailerM.Mail{To: "test@test.test", Subject: "Subject", Message: "Message"})
 	serial := string(marshal)
@@ -80,9 +84,12 @@ func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
 	// Just so that it doesn't actually send an email
 	mockMailer := new(MockMailer)
 
+	impl := MailerControllerImpl{}
+
 	router := gin.Default()
-	Inject(mockMailer)
-	Routes(router)
+	impl.Inject(mockMailer)
+	err := impl.Routes(router)
+	assert.Nil(t, err)
 
 	marshal, _ := json.Marshal(mailerM.Mail{To: "", Subject: "Subject", Message: "Message"})
 	serial := string(marshal)
@@ -103,8 +110,9 @@ func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
 
 func TestNilInject(t *testing.T) {
 	router := gin.Default()
-	assert.Error(t, Routes(router))
+	impl := MailerControllerImpl{}
+	assert.Error(t, impl.Routes(router))
 
-	Inject(nil)
-	assert.Error(t, Routes(router))
+	impl.Inject(nil)
+	assert.Error(t, impl.Routes(router))
 }

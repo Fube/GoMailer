@@ -27,8 +27,11 @@ func main() {
 
 	dialer := utils.CreateMailer("smtp.gmail.com", os.Getenv("EMAIL"), os.Getenv("PASSWORD"))
 
-	mailerC.Inject(&dialer)
-	if err := mailerC.Routes(router); err != nil {
+	mailerController := mailerC.MailerControllerImpl{}
+
+	mailerController.Inject(&dialer)
+	if err := mailerController.Routes(router); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 }
