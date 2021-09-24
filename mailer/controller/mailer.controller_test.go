@@ -1,11 +1,17 @@
 package controller
 
 import (
+	"GoMailer/internal/projectpath"
+	"GoMailer/mailer"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -23,6 +29,10 @@ func testHTTPResponse(t *testing.T, r *gin.Engine, req *http.Request, f func(w *
 }
 
 func TestMain(m *testing.M) {
+
+	// Perhaps the hachiest solution one could come up with, but it works so
+	godotenv.Load(filepath.Join(projectpath.Root, "/.env"))
+
 	//Set Gin to Test Mode
 	gin.SetMode(gin.TestMode)
 
@@ -30,12 +40,14 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-
 func TestRegisterMailRoute(t *testing.T) {
 	router := gin.Default()
 	Routes(router)
 
-	req, err := http.NewRequest(http.MethodPost, "/mail", nil)
+	marshal, _ := json.Marshal(mailer.Mail{To: "test@test.test", Subject: "Subject", Message: "Message"})
+	json := string(marshal)
+
+	req, err := http.NewRequest(http.MethodPost, "/mail", strings.NewReader(json))
 
 	if err != nil {
 		fmt.Println(err)
