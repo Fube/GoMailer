@@ -1,7 +1,7 @@
 package main
 
 import (
-	mailerC "awesomeProject1/mailer/controller"
+	mailerC "GoMailer/mailer/controller"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

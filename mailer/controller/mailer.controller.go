@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"awesomeProject1/mailer"
-	mailerS "awesomeProject1/mailer/service"
+	"GoMailer/mailer"
+	mailerS "GoMailer/mailer/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"

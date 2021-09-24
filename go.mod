@@ -1,4 +1,4 @@
-module awesomeProject1
+module GoMailer
 
 go 1.17
 

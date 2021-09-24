@@ -1,7 +1,7 @@
 package service
 
 import (
-	"awesomeProject1/mailer"
+	"GoMailer/mailer"
 	"crypto/tls"
 	gomail "gopkg.in/mail.v2"
 )
