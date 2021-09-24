@@ -4,7 +4,6 @@ import (
 	mailerM "GoMailer/mailer"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"net/http"
 	"os"
 )
@@ -17,7 +16,9 @@ func Inject(m mailerM.Mailer) {
 
 func handleSendEmail(context *gin.Context) {
 
-	if err := mailer.SendEmail(&mail); err != nil {
+	mail := context.Keys["mail"].(*mailerM.Mail)
+
+	if err := mailer.SendEmail(mail); err != nil {
 		fmt.Println(err)
 		context.JSON(http.StatusInternalServerError, err)
 		return
@@ -34,6 +35,6 @@ func Routes(route *gin.Engine) {
 		os.Exit(1)
 	}
 
-	group := route.Group("/mail")
+	group := route.Group("/mail").Use(UnMarshallMail, ValidateEmail)
 	group.POST("", handleSendEmail)
 }
