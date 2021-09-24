@@ -51,7 +51,11 @@ func TestMain(m *testing.M) {
 }
 
 func TestRegisterMailRouteWithValidInfo(t *testing.T) {
+	// Just so that it doesn't actually send an email
+	mockMailer := new(MockMailer)
+
 	router := gin.Default()
+	Inject(mockMailer)
 	Routes(router)
 
 	marshal, _ := json.Marshal(mailerM.Mail{To: "test@test.test", Subject: "Subject", Message: "Message"})
