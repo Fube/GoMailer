@@ -7,5 +7,6 @@ type Mailer interface {
 type Mail struct {
 	To string `json:"to"`
 	Message string `json:"message"`
+	Subject string `json:"subject"`
 }
 

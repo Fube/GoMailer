@@ -22,7 +22,7 @@ func (d Dialer) SendEmail(mail *mailer.Mail) error {
 	m.SetHeader("To", mail.To)
 
 	// Set E-Mail subject
-	m.SetHeader("Subject", "Gomail test subject")
+	m.SetHeader("Subject", mail.Subject)
 
 	// Set E-Mail body. You can set plain text or html with text/html
 	m.SetBody("text/html", mail.Message)
