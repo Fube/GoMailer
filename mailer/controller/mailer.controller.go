@@ -11,8 +11,8 @@ import (
 
 var dialer mailerS.Dialer
 
-func setup() {
-	dialer = mailerS.CreateMailer("smtp.gmail.com", os.Getenv("EMAIL"), os.Getenv("PASSWORD"))
+func Inject(d *mailerS.Dialer) {
+	dialer = *d
 }
 
 func handleSendEmail(context *gin.Context) {
@@ -37,7 +37,10 @@ func handleSendEmail(context *gin.Context) {
 // Routes injection for mailer
 func Routes(route *gin.Engine) {
 
-	setup()
+	if dialer.Dialer == nil {
+		fmt.Fprintln(os.Stderr, fmt.Errorf("dialer dependency not injected or point to nil"))
+		os.Exit(1)
+	}
 
 	group := route.Group("/mail")
 	group.POST("", handleSendEmail)

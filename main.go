@@ -2,9 +2,11 @@ package main
 
 import (
 	mailerC "GoMailer/mailer/controller"
+	mailerS "GoMailer/mailer/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"os"
 )
 
 func LoadEnv() {
@@ -23,5 +25,8 @@ func main() {
 	router := gin.Default()
 	defer router.Run()
 
+	dialer := mailerS.CreateMailer("smtp.gmail.com", os.Getenv("EMAIL"), os.Getenv("PASSWORD"))
+
+	mailerC.Inject(&dialer)
 	mailerC.Routes(router)
 }
