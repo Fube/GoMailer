@@ -100,3 +100,11 @@ func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
 		return true
 	})
 }
+
+func TestNilInject(t *testing.T) {
+	router := gin.Default()
+	assert.Error(t, Routes(router))
+
+	Inject(nil)
+	assert.Error(t, Routes(router))
+}

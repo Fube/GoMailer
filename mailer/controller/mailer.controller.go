@@ -2,10 +2,10 @@ package controller
 
 import (
 	mailerM "GoMailer/mailer"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"os"
 )
 
 var mailer mailerM.Mailer
@@ -28,13 +28,13 @@ func handleSendEmail(context *gin.Context) {
 }
 
 // Routes injection for mailer
-func Routes(route *gin.Engine) {
+func Routes(route *gin.Engine) error {
 
 	if mailer == nil {
-		_, _ = fmt.Fprintln(os.Stderr, fmt.Errorf("dialer dependency not injected or point to nil"))
-		os.Exit(1)
+		return errors.New("dialer dependency not injected or point to nil")
 	}
 
 	group := route.Group("/mail").Use(UnMarshallMail, ValidateEmail)
 	group.POST("", handleSendEmail)
+	return nil
 }
