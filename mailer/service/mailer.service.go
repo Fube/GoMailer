@@ -25,7 +25,7 @@ func (d Dialer) SendEmail(mail *mailer.Mail) error {
 	m.SetHeader("Subject", "Gomail test subject")
 
 	// Set E-Mail body. You can set plain text or html with text/html
-	m.SetBody("text/plain", mail.Message)
+	m.SetBody("text/html", mail.Message)
 
 	// Now send E-Mail
 	return d.Dialer.DialAndSend(m)
