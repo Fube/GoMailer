@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -15,6 +16,14 @@ import (
 	"strings"
 	"testing"
 )
+
+type MockMailer struct {
+	mock.Mock
+}
+
+func (m MockMailer) SendEmail(mail *mailerM.Mail) error {
+	return nil
+}
 
 func testHTTPResponse(t *testing.T, r *gin.Engine, req *http.Request, f func(w *httptest.ResponseRecorder) bool) {
 
@@ -57,13 +66,18 @@ func TestRegisterMailRouteWithValidInfo(t *testing.T) {
 
 	testHTTPResponse(t, router, req, func(w *httptest.ResponseRecorder) bool {
 
-		assert.Equal(t, w.Code, http.StatusOK)
+		assert.Equal(t, http.StatusOK, w.Code)
 		return true
 	})
 }
 
 func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
+
+	// Just so that it doesn't actually send an email
+	mockMailer := new(MockMailer)
+
 	router := gin.Default()
+	Inject(mockMailer)
 	Routes(router)
 
 	marshal, _ := json.Marshal(mailerM.Mail{To: "", Subject: "Subject", Message: "Message"})
@@ -78,7 +92,7 @@ func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
 
 	testHTTPResponse(t, router, req, func(w *httptest.ResponseRecorder) bool {
 
-		assert.Equal(t, w.Code, http.StatusBadRequest)
+		assert.Equal(t, http.StatusBadRequest, w.Code)
 		return true
 	})
 }

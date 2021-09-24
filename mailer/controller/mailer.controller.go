@@ -4,6 +4,7 @@ import (
 	mailerM "GoMailer/mailer"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"net/http"
 	"os"
 )
@@ -16,9 +17,17 @@ func Inject(m mailerM.Mailer) {
 
 func handleSendEmail(context *gin.Context) {
 
+	validate := validator.New()
+
 	var mail mailerM.Mail
 
 	if err := context.ShouldBindJSON(&mail); err != nil {
+		fmt.Println(err)
+		context.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	if err := validate.Struct(mail); err != nil {
 		fmt.Println(err)
 		context.JSON(http.StatusBadRequest, err)
 		return

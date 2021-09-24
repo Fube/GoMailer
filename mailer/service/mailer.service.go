@@ -36,6 +36,6 @@ func CreateMailer(host, email, password string, port... int) Dialer {
 
 	// Set to false for prod
 	embeddedDialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-
+	
 	return Dialer{Dialer: embeddedDialer}
 }

@@ -5,7 +5,7 @@ type Mailer interface {
 }
 
 type Mail struct {
-	To string `json:"to"`
-	Message string `json:"message"`
+	To string `json:"to" validate:"required,email"`
+	Message string `json:"message" validate:"required"`
 	Subject string `json:"subject"`
 }
