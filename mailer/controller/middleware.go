@@ -28,9 +28,6 @@ func ValidateEmail(c *gin.Context) {
 
 	mail := c.Keys["mail"].(*mailerM.Mail)
 
-	if mail == nil {
-		c.JSON(http.StatusInternalServerError, "Unable to unmarshall email or none set")
-	}
 
 	if err := validate.Struct(mail); err != nil {
 		fmt.Println(err)
