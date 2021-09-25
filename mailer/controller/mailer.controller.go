@@ -27,9 +27,11 @@ func (m MailerControllerImpl) handleSendEmail(context *gin.Context) {
 		return
 	}
 
-	if err := m.mailer.SendEmail(mail.(*mailerM.Mail)); err != nil {
+	trueMail := mail.(*mailerM.Mail)
+
+	if err := m.mailer.SendEmail(trueMail); err != nil {
 		fmt.Println(err)
-		context.JSON(http.StatusInternalServerError, err)
+		context.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 

@@ -4,6 +4,7 @@ import (
 	"GoMailer/internal/projectpath"
 	mailerM "GoMailer/mailer"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -21,12 +22,9 @@ type MockMailer struct {
 	mock.Mock
 }
 
-type JSONer interface {
-	JSON(code int, obj interface{})
-}
-
 func (m MockMailer) SendEmail(mail *mailerM.Mail) error {
-	return nil
+	args := m.Called()
+	return args.Error(0)
 }
 
 func testHTTPResponse(t *testing.T, r *gin.Engine, req *http.Request, f func(w *httptest.ResponseRecorder) bool) {
@@ -128,4 +126,22 @@ func TestHandleSendEmailNilMailInContext(t *testing.T) {
 
 	MailerControllerImpl{}.handleSendEmail(c)
 	assert.Equal(t, "Unable to parse e-mail from body", recorder.Body)
+}
+
+func TestHandleSendEmailErrInMailerSendEmail(t *testing.T) {
+
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	testMail := mailerM.Mail{To: "test@test.test", Subject: "test-subject", Message: "test-message"}
+	c.Set("mail", &testMail)
+
+	impl := MailerControllerImpl{}
+	mailer := MockMailer{}
+	mailer.On("SendEmail", mock.Anything).Return(errors.New("Test error"))
+	impl.mailer = mailer
+	impl.handleSendEmail(c)
+
+	assert.Equal(t, http.StatusInternalServerError, recorder.Code)
+
+	assert.Equal(t, "\"Test error\"", recorder.Body.String())
 }
