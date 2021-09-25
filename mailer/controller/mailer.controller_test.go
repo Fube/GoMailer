@@ -145,3 +145,21 @@ func TestHandleSendEmailErrInMailerSendEmail(t *testing.T) {
 
 	assert.Equal(t, "\"Test error\"", recorder.Body.String())
 }
+
+func TestHandleSendEmailOk(t *testing.T) {
+
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	testMail := mailerM.Mail{To: "test@test.test", Subject: "test-subject", Message: "test-message"}
+	c.Set("mail", &testMail)
+
+	impl := MailerControllerImpl{}
+	mailer := MockMailer{}
+	mailer.On("SendEmail", mock.Anything).Return(nil)
+	impl.mailer = mailer
+	impl.handleSendEmail(c)
+
+	assert.Equal(t, http.StatusOK, recorder.Code)
+
+	assert.Empty(t, recorder.Body.String())
+}
