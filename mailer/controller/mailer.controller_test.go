@@ -163,3 +163,14 @@ func TestHandleSendEmailOk(t *testing.T) {
 
 	assert.Empty(t, recorder.Body.String())
 }
+
+func TestInValidEmailUnmarshallMiddleware(t *testing.T) {
+
+	recorder := httptest.NewRecorder()
+	context, _ := gin.CreateTestContext(recorder)
+
+	context.Request, _ = http.NewRequest("test-method", "test-url", strings.NewReader("invalid-test"))
+	UnMarshallMail(context)
+
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+}

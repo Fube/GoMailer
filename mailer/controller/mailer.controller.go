@@ -42,7 +42,7 @@ func (m MailerControllerImpl) handleSendEmail(context *gin.Context) {
 func (m MailerControllerImpl) Routes(route *gin.Engine) error {
 
 	if m.mailer == nil {
-		return errors.New("dialer dependency not injected or point to nil")
+		return errors.New("dialer dependency not injected or points to nil")
 	}
 
 	group := route.Group("/mail").Use(UnMarshallMail, ValidateEmail)
