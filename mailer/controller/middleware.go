@@ -34,7 +34,7 @@ func ValidateEmail(c *gin.Context) {
 
 	if err := validate.Struct(mail); err != nil {
 		fmt.Println(err)
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 }
