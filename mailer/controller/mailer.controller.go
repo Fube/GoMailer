@@ -19,9 +19,15 @@ func (m *MailerControllerImpl) Inject(mailer mailerM.Mailer) {
 
 func (m MailerControllerImpl) handleSendEmail(context *gin.Context) {
 
-	mail := context.Keys["mail"].(*mailerM.Mail)
+	var mail interface{}
+	var exists bool
+	if mail, exists = context.Get("mail"); !exists {
+		fmt.Println("E-mail not in context")
+		context.JSON(http.StatusBadRequest, "Unable to parse e-mail from body")
+		return
+	}
 
-	if err := m.mailer.SendEmail(mail); err != nil {
+	if err := m.mailer.SendEmail(mail.(*mailerM.Mail)); err != nil {
 		fmt.Println(err)
 		context.JSON(http.StatusInternalServerError, err)
 		return

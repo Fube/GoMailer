@@ -21,6 +21,10 @@ type MockMailer struct {
 	mock.Mock
 }
 
+type JSONer interface {
+	JSON(code int, obj interface{})
+}
+
 func (m MockMailer) SendEmail(mail *mailerM.Mail) error {
 	return nil
 }
@@ -115,4 +119,13 @@ func TestNilInject(t *testing.T) {
 
 	impl.Inject(nil)
 	assert.Error(t, impl.Routes(router))
+}
+
+func TestHandleSendEmailNilMailInContext(t *testing.T) {
+
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+
+	MailerControllerImpl{}.handleSendEmail(c)
+	assert.Equal(t, "Unable to parse e-mail from body", recorder.Body)
 }
