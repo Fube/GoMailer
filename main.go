@@ -9,18 +9,9 @@ import (
 	"os"
 )
 
-func LoadEnv() {
-
-	if err := godotenv.Load(); err != nil {
-		fmt.Println(err)
-		panic("Unable to load .env file")
-	}
-}
-
-
 func main() {
 
-	LoadEnv()
+	godotenv.Load()
 
 	router := gin.Default()
 	defer router.Run()
