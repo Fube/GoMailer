@@ -1,7 +1,9 @@
-act=$(go test -race -covermode=atomic -v -coverpkg=./... -coverprofile=cover.out ./...\
-| grep coverage\
-| awk 'NR==1 {print substr($2, 0, length($2)-1)}'\
-&& go tool cover -html=cover.out -o cover.html)
+# Generate visual report
+go test -race -covermode=atomic -v -coverpkg=./... -coverprofile=cover.out ./...\
+&& go tool cover -html=cover.out -o cover.html
+
+# Get overall coverage percentage for coverage threshold testing
+act=$(go tool cover -func cover.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
 
 cvg=${cvg:=90}
 
