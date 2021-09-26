@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"net"
 	"net/textproto"
@@ -25,10 +24,6 @@ func TestMain(m *testing.M) {
 
 	spy = s
 
-	//Set Gin to Test Mode
-	gin.SetMode(gin.TestMode)
-
-	// Run the other tests
 	os.Exit(m.Run())
 }
 
