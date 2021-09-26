@@ -14,6 +14,7 @@ cvg=${cvg:=90}
 if [ 1 -eq "$(echo "${act} < ${cvg}" | bc)" ]
 then
   echo "Code coverage test failed"
-  echo "Expected minimum $cvg%, got $act%"
   exit 1
 fi
+
+echo "Expected minimum coverage $cvg%, got $act%"
