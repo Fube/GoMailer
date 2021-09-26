@@ -1,19 +1,16 @@
 package controller
 
 import (
-	"GoMailer/internal/projectpath"
 	mailerM "GoMailer/mailer"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -41,9 +38,6 @@ func testHTTPResponse(t *testing.T, r *gin.Engine, req *http.Request, f func(w *
 }
 
 func TestMain(m *testing.M) {
-
-	// Perhaps the hachiest solution one could come up with, but it works so
-	godotenv.Load(filepath.Join(projectpath.Root, "/.env"))
 
 	//Set Gin to Test Mode
 	gin.SetMode(gin.TestMode)
