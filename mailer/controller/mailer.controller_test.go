@@ -177,6 +177,17 @@ func TestInvalidEmailUnmarshallMiddleware(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, recorder.Code)
 }
 
+func TestNilBodyUnmarshallMiddleware(t *testing.T) {
+
+	recorder := httptest.NewRecorder()
+	context, _ := gin.CreateTestContext(recorder)
+
+	context.Request, _ = http.NewRequest("test-method", "test-url", nil)
+	UnMarshallMail(context)
+
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+}
+
 func TestInvalidEmailMiddleware(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
