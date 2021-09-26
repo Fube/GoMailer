@@ -1,4 +1,4 @@
-act=$(go test -v -coverpkg=./... -coverprofile=cover.out ./...\
+act=$(go test -race -covermode=atomic -v -coverpkg=./... -coverprofile=cover.out ./...\
 | grep coverage\
 | awk 'NR==1 {print substr($2, 0, length($2)-1)}'\
 && go tool cover -html=cover.out -o cover.html)

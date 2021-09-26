@@ -55,6 +55,7 @@ func TestMain(m *testing.M) {
 func TestRegisterMailRouteWithValidInfo(t *testing.T) {
 	// Just so that it doesn't actually send an email
 	mockMailer := new(MockMailer)
+	mockMailer.On("SendEmail", mock.Anything).Return(nil)
 
 	impl := MailerControllerImpl{}
 
@@ -85,6 +86,7 @@ func TestRegisterMailRouteWithInvalidInfo(t *testing.T) {
 
 	// Just so that it doesn't actually send an email
 	mockMailer := new(MockMailer)
+	mockMailer.On("SendEmail", mock.Anything).Return(nil)
 
 	impl := MailerControllerImpl{}
 
@@ -125,7 +127,7 @@ func TestHandleSendEmailNilMailInContext(t *testing.T) {
 	c, _ := gin.CreateTestContext(recorder)
 
 	MailerControllerImpl{}.handleSendEmail(c)
-	assert.Equal(t, "Unable to parse e-mail from body", recorder.Body)
+	assert.Equal(t, "\"Unable to parse e-mail from body\"", recorder.Body.String())
 }
 
 func TestHandleSendEmailErrInMailerSendEmail(t *testing.T) {
