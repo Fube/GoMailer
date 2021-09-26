@@ -193,3 +193,15 @@ func TestInvalidEmailMiddleware(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, recorder.Code)
 	assert.Equal(t, "\"Key: 'Mail.To' Error:Field validation for 'To' failed on the 'required' tag\\nKey: 'Mail.Message' Error:Field validation for 'Message' failed on the 'required' tag\"", recorder.Body.String())
 }
+
+func TestInvalidRequestBodyInEmailMiddleware(t *testing.T) {
+
+	recorder := httptest.NewRecorder()
+	context, _ := gin.CreateTestContext(recorder)
+
+	context.Set("mail", nil)
+	ValidateEmail(context)
+
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	assert.Equal(t, "\"ERROR! e-mail not found\"", recorder.Body.String())
+}

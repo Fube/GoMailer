@@ -29,7 +29,7 @@ func ValidateEmail(c *gin.Context) {
 	validate := validator.New()
 
 	//mail := c.Keys["mail"].(*mailerM.Mail)
-	if m, e := c.Get("mail"); !e {
+	if m, e := c.Get("mail"); !e || m == nil {
 		s := "ERROR! e-mail not found"
 		fmt.Println(s)
 		c.JSON(http.StatusBadRequest, s)
