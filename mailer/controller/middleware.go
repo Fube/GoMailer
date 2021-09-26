@@ -24,10 +24,19 @@ func UnMarshallMail(c *gin.Context) {
 
 func ValidateEmail(c *gin.Context) {
 
+	var mail *mailerM.Mail
+
 	validate := validator.New()
 
-	mail := c.Keys["mail"].(*mailerM.Mail)
-
+	//mail := c.Keys["mail"].(*mailerM.Mail)
+	if m, e := c.Get("mail"); !e {
+		s := "ERROR! e-mail not found"
+		fmt.Println(s)
+		c.JSON(http.StatusBadRequest, s)
+		return
+	} else {
+		mail = m.(*mailerM.Mail)
+	}
 
 	if err := validate.Struct(mail); err != nil {
 		fmt.Println(err)
